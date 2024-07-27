@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/sh
 # ECEA 5305 Assignment 1
 # Author: Travis Hunter
 
