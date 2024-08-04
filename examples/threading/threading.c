@@ -16,18 +16,23 @@ void* threadfunc(void* thread_param)
     //struct thread_data* thread_func_args = (struct thread_data *) thread_param;
 
     struct thread_data* param = (struct thread_data*) thread_param;
-    usleep(1000* param->obtain_ms);
+    printf("In thread: obtain_ms: %d\n", param->obtain_ms);
+    printf("In thread: release_ms: %d\n", param->release_ms);
+    usleep(param->obtain_ms);
+    printf("1\n");
     
     pthread_mutex_lock(param->mtx);
+    printf("2\n");
 
-    usleep(1000 * param->release_ms);
+    usleep(param->release_ms);
+    printf("3\n");
 
     pthread_mutex_unlock(param->mtx);
+    printf("4\n");
 
     param->thread_complete_success = true;
     return thread_param;
 }
-
 
 bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int wait_to_obtain_ms, int wait_to_release_ms)
 {
@@ -41,17 +46,19 @@ bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int 
      */
      struct thread_data* param = (struct thread_data*) malloc(sizeof(struct thread_data));
 
+     printf("wait_to_obtain_ms: %d\n", wait_to_obtain_ms);
+     printf("wait_to_release_ms: %d\n", wait_to_release_ms);
+
      param->obtain_ms = wait_to_obtain_ms;
      param->release_ms = wait_to_release_ms;
      param->mtx = mutex;
 
-     pthread_t thread;
-     pthread_create(&thread,
+     pthread_create(thread,
                     NULL,
                     threadfunc,
                     (void*) param);
     
-    pthread_join(thread);
+    pthread_join(*thread, (void**) &param);
     free(param);
     return false;
 }

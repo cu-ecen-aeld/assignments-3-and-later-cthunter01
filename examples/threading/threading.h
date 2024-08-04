@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <pthread.h>
-#include <mmutex.h>
 
 /**
  * This structure should be dynamically allocated and passed as
